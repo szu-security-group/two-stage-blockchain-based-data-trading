@@ -1,0 +1,158 @@
+{
+	"compiler": {
+		"version": "0.6.12+commit.27d51765"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "payable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [],
+				"name": "ExecutionCompleted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [],
+				"name": "PaidWithDescription",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [],
+				"name": "PublishedMasterKey",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_description",
+						"type": "bytes32"
+					}
+				],
+				"name": "PayWithDescription",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_masterKey",
+						"type": "bytes32"
+					}
+				],
+				"name": "PublishMasterKey",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_committed_ri",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_committedSubKey",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32[]",
+						"name": "_merkleTreePath",
+						"type": "bytes32[]"
+					}
+				],
+				"name": "RaiseObjection",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "RefundToBuyer",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "TransferToSeller",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "masterKey",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "state",
+				"outputs": [
+					{
+						"internalType": "enum FairDEx.State",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"fairdex.sol": "FairDEx"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"fairdex.sol": {
+			"keccak256": "0x075edd0e8c88de937c06f4e0ae6978f5711b0196afb9e1c6a64870eecc03dab2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://775240f5cc05d1e9feafb93a2fc6388d8e4abebd0f36ea1502f3274353a224fd",
+				"dweb:/ipfs/Qmd2a8c5B9wgPaomZU188Dzj3XRsF5wLABzct8ybQwhP5e"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1,0 +1,317 @@
+{
+	"compiler": {
+		"version": "0.4.26+commit.4563c3fc"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"name": "_Zm",
+						"type": "bytes32"
+					},
+					{
+						"name": "_proofZm",
+						"type": "bytes32[14]"
+					}
+				],
+				"name": "complainAboutRoot",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"name": "_index",
+						"type": "uint256"
+					},
+					{
+						"name": "_value",
+						"type": "bytes32"
+					},
+					{
+						"name": "_proof",
+						"type": "bytes32[14]"
+					}
+				],
+				"name": "vrfy",
+				"outputs": [
+					{
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "accept",
+				"outputs": [],
+				"payable": true,
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "key",
+				"outputs": [
+					{
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "refund",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "timeout",
+				"outputs": [
+					{
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"name": "_indexOut",
+						"type": "uint256"
+					},
+					{
+						"name": "_indexIn",
+						"type": "uint256"
+					},
+					{
+						"name": "_Zout",
+						"type": "bytes32"
+					},
+					{
+						"name": "_Zin1",
+						"type": "bytes32"
+					},
+					{
+						"name": "_Zin2",
+						"type": "bytes32"
+					},
+					{
+						"name": "_proofZout",
+						"type": "bytes32[14]"
+					},
+					{
+						"name": "_proofZin",
+						"type": "bytes32[14]"
+					}
+				],
+				"name": "complainAboutNode",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"name": "_index",
+						"type": "uint256"
+					},
+					{
+						"name": "_ciphertext",
+						"type": "bytes32"
+					}
+				],
+				"name": "cryptSmall",
+				"outputs": [
+					{
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"name": "_index",
+						"type": "uint256"
+					},
+					{
+						"name": "_ciphertext",
+						"type": "bytes32[2]"
+					}
+				],
+				"name": "cryptLarge",
+				"outputs": [
+					{
+						"name": "",
+						"type": "bytes32[2]"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"name": "_receiver",
+						"type": "address"
+					},
+					{
+						"name": "_price",
+						"type": "uint256"
+					},
+					{
+						"name": "_keyCommit",
+						"type": "bytes32"
+					},
+					{
+						"name": "_ciphertextRoot",
+						"type": "bytes32"
+					},
+					{
+						"name": "_fileRoot",
+						"type": "bytes32"
+					}
+				],
+				"name": "ininitialize",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "phase",
+				"outputs": [
+					{
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "noComplain",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"name": "_key",
+						"type": "bytes32"
+					}
+				],
+				"name": "revealKey",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"name": "_indexOut",
+						"type": "uint256"
+					},
+					{
+						"name": "_indexIn",
+						"type": "uint256"
+					},
+					{
+						"name": "_Zout",
+						"type": "bytes32"
+					},
+					{
+						"name": "_Zin1",
+						"type": "bytes32[2]"
+					},
+					{
+						"name": "_Zin2",
+						"type": "bytes32[2]"
+					},
+					{
+						"name": "_proofZout",
+						"type": "bytes32[14]"
+					},
+					{
+						"name": "_proofZin",
+						"type": "bytes32[14]"
+					}
+				],
+				"name": "complainAboutLeaf",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"FairFileSale.sol": "fileSale"
+		},
+		"evmVersion": "byzantium",
+		"libraries": {},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"FairFileSale.sol": {
+			"keccak256": "0xc6072daffb05df1f0bb2e3eec8b6ac50a82aec105f5851632af20d21c3620645",
+			"urls": [
+				"bzzr://44f347f5c08eaaadf5065dee32652f90010f2cc96caf7717348e6279d926c06e"
+			]
+		}
+	},
+	"version": 1
+}
