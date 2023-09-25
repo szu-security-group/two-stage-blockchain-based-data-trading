@@ -71,7 +71,6 @@ func ConfigStringMap(key string) map[string]interface{} {
 func ScanDir(dirPath string) (map[string]string, error) {
 	// 初始化 map 存储文件信息
 	fileInfoMap := make(map[string]string)
-
 	// 遍历目录
 	err := filepath.Walk(dirPath, func(filePath string, file os.FileInfo, err error) error {
 		// 如果当前路径是目录，则跳过该路径

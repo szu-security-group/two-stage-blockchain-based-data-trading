@@ -64,7 +64,7 @@ We implemented this part as a Go client program. It simulates the most essential
 4. Generate the code required to invoke the contract by executing `abigen --abi trading.abi --pkg mycontract --type trading --out ./mycontract/trading.go`.
 5. All tests can be executed by running `go test -v`.
 6. Alternatively, you can specify to run a specific function by running `go test -run TestMyFunction`.
-
+7. In addition, we provide a script`compute_challenge.py`for calculating the challenge length required to achieve 99% detecting rate with 5% tolerance rate given the data size and block size. One may make adjustments as needed.
 ## Directory Explanation
 The project files are composed of several directories that are accompanied by a brief explanation for each.
 - `utils`：Utility classes.
@@ -97,7 +97,7 @@ The main content is to perform Merkle tree commitment on subkeys.
 ### Payleft
 DB can run
 `go test -run TestPayleft` to pay the remaining money.
-Before making the final payment, DB can perform the `CheckSample` operation. 
+Before making the final payment, DB can perform the `CheckSample` operation.
 Here we only provide performance tests for `CheckSample`.
 ### Benchmark
 #### time cost

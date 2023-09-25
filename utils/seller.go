@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 )
 
 // Divide the file in 1MB blocks and encrypt each block with AES
@@ -23,9 +24,10 @@ func EncryptFileWithMasterKey(inFile, outFile, outkey string, masterKey []byte) 
 	}
 	defer in.Close()
 
-	// Processes 1MB of data at a time
-	buf := make([]byte, 1024*1024)
+	// Processes 100kB of data at a time
+	buf := make([]byte, 100*1024)
 	i := 1
+	var totalEncryptionTime time.Duration
 	for {
 		// Create output file
 		out, err := os.Create(outFile + strconv.Itoa(i) + ".zip")
@@ -45,9 +47,13 @@ func EncryptFileWithMasterKey(inFile, outFile, outkey string, masterKey []byte) 
 		if n == 0 {
 			break
 		}
+		startTime := time.Now()
 		subKeyi := hmac.HMACK(masterKey, IntToBytes(i))
 		// Encrypted Data
 		encrypt, err := aes.Encrypt(buf[:n], subKeyi)
+		endTime := time.Now()
+		encryptionTime := endTime.Sub(startTime)
+		totalEncryptionTime += encryptionTime
 		// Save the key as well
 		// Write encrypted data to the output file
 		if _, err := out.Write(encrypt); err != nil {
@@ -58,67 +64,33 @@ func EncryptFileWithMasterKey(inFile, outFile, outkey string, masterKey []byte) 
 		}
 		i++
 	}
-
+	fmt.Println("EncryptFileWithMasterKey:", totalEncryptionTime.Seconds())
 	return nil
 }
-func EncryptFileWithMasterKey2(k1Map map[string]string, filedir, outEncFileDir, outkey2Dir string, masterKey []byte) {
 
+func EncryptFileWithMasterKey2(k1Map map[string]string, filedir, outEncFileDir, outkey2Dir string, masterKey []byte) {
+	var totalEncryptionTime time.Duration
 	for key1name, key1Filepath := range k1Map {
 		plaintext, _ := ioutil.ReadFile(key1Filepath)
 		i, _ := strconv.Atoi(key1name)
+		startTime := time.Now()
 		subKeyi := hmac.HMACK(masterKey, common.LeftPadBytes(IntToBytes(i), 32))
+		endTime := time.Now()
+		totalEncryptionTime += endTime.Sub(startTime)
 		out2, _ := os.Create(outkey2Dir + strconv.Itoa(i) + ".key")
 		out2.Write(subKeyi)
+		startTime = time.Now()
 		encKey, _ := aes.Encrypt(plaintext, subKeyi)
+		endTime = time.Now()
+		totalEncryptionTime += endTime.Sub(startTime)
 		newpath := outEncFileDir + key1name + ".key.enc"
 		f, _ := os.Create(newpath)
 		// Write the encrypted contents to the file next
 		f.Write(encKey)
 	}
-	//// Directory containing the files to be encrypted
-	//
-	//// Loop through all files in the directory
-	//i := 1
-	//err := filepath.Walk(filedir, func(path string, info os.FileInfo, err error) error {
-	//	// Only process regular files (not directories or special files)
-	//	if !info.Mode().IsRegular() {
-	//		return nil
-	//	}
-	//
-	//	// Read the file contents into memory
-	//	plaintext, err := ioutil.ReadFile(path)
-	//	if err != nil {
-	//		return err
-	//	}
-	//	//Requires both inputs to be 32-bit
-	//	subKeyi := hmac.HMACK(masterKey, common.LeftPadBytes(IntToBytes(i), 32))
-	//	out2, err := os.Create(outkey2Dir + strconv.Itoa(i) + ".key")
-	//	if _, err := out2.Write(subKeyi); err != nil {
-	//		return err
-	//	}
-	//	// Encrypted Data
-	//	encrypt, err := aes.Encrypt(plaintext, subKeyi)
-	//	// Write the encrypted contents to a new file with a .enc extension
-	//	_, fileName := filepath.Split(path)
-	//	newpath := outEncFileDir + fileName + ".enc"
-	//	f, err := os.Create(newpath)
-	//	if err != nil {
-	//		return err
-	//	}
-	//	defer f.Close()
-	//	// Write the encrypted contents to the file next
-	//	_, err = f.Write(encrypt)
-	//	if err != nil {
-	//		return err
-	//	}
-	//	i++
-	//	return nil
-	//})
-	//if err != nil {
-	//	fmt.Println("Error:", err)
-	//	os.Exit(1)
-	//}
+	fmt.Println("EncryptFileWithMasterKey2:", totalEncryptionTime.Seconds())
 }
+
 func readDir(dir string) ([][]byte, error) {
 	var data [][]byte
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
@@ -140,7 +112,7 @@ func readDir(dir string) ([][]byte, error) {
 //Make a commitment to data
 func CommitData(keyMap, fileMap map[string]string) *merkleTree.MerkleTree {
 	var datas [][]byte
-
+	var totalEncryptionTime time.Duration
 	for fileName, filePath := range keyMap {
 		// Read the first file
 		data1, _ := ioutil.ReadFile(filePath)
@@ -148,60 +120,15 @@ func CommitData(keyMap, fileMap map[string]string) *merkleTree.MerkleTree {
 		data := append(data1, data2...)
 		datas = append(datas, data)
 	}
-	//filepath.Walk(enckeysDir, func(path string, info os.FileInfo, err error) error {
-	//	if err != nil {
-	//		fmt.Println(err)
-	//		return err
-	//	}
-	//	// If the current file is a directory, skip
-	//	if info.IsDir() {
-	//		return nil
-	//	}
-	//
-	//	// Get file name
-	//	filename := info.Name()
-	//	// Read the first file
-	//	data1, err := ioutil.ReadFile(path)
-	//	if err != nil {
-	//		return err
-	//	}
-	//
-	//	filename = strings.Split(filename, ".")[0]
-	//	// Find files with the same name in the B folder
-	//	filepath.Walk(dataDir, func(path string, info os.FileInfo, err error) error {
-	//		if err != nil {
-	//			fmt.Println(err)
-	//			return err
-	//		}
-	//
-	//		// If the current file is a directory, skip
-	//		if info.IsDir() {
-	//			return nil
-	//		}
-	//
-	//		// If a file with the same name is found, the two files are concatenated
-	//		if strings.Split(info.Name(), ".")[0] == filename {
-	//
-	//			// Read the second file
-	//			data2, err := ioutil.ReadFile(path)
-	//			if err != nil {
-	//				return err
-	//			}
-	//			// Splice the contents of two files
-	//			data := append(data1, data2...)
-	//			datas = append(datas, data)
-	//		}
-	//		return nil
-	//	})
-	//	return nil
-	//})
-
+	startTime := time.Now()
 	tree := merkleTree.NewMerkleTree(datas)
-	//tree.PrintTree()
-	//MekleTree commit
+	endTime := time.Now()
+	totalEncryptionTime += endTime.Sub(startTime)
+	fmt.Println("CommitData:", totalEncryptionTime.Seconds())
 	return tree
 }
-func CommitSampleKeys(enckeysDir string) *merkleTree.MerkleTree {
+
+func CommitSampleKeys(enckeysDir string, challenge int) *merkleTree.MerkleTree {
 	var datas [][]byte
 	var files []string
 	err := filepath.Walk(enckeysDir, func(path string, info os.FileInfo, err error) error {
@@ -218,7 +145,7 @@ func CommitSampleKeys(enckeysDir string) *merkleTree.MerkleTree {
 	}
 
 	for i, file := range files {
-		if i == 950 {
+		if i == challenge {
 			break
 		}
 		data, err := ioutil.ReadFile(file)
@@ -227,7 +154,11 @@ func CommitSampleKeys(enckeysDir string) *merkleTree.MerkleTree {
 		}
 		datas = append(datas, data)
 	}
-	return merkleTree.NewMerkleTree(datas)
+	start := time.Now()
+	tree := merkleTree.NewMerkleTree(datas)
+	end := time.Now()
+	println("CommitSampleKeys:", end.Sub(start))
+	return tree
 }
 func Createfile2Buyer(keyMap, fileMap map[string]string, outFile string) {
 	i := 0

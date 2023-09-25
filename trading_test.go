@@ -1,9 +1,8 @@
-package newversion
+package main
 
 import (
 	"context"
 	"crypto/ecdsa"
-	"dataTrading/aes"
 	merkleTree "dataTrading/merkle"
 	"dataTrading/mycontract"
 	"dataTrading/utils"
@@ -12,8 +11,6 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
-	shell "github.com/ipfs/go-ipfs-api"
-	"io/ioutil"
 	"log"
 	"math/big"
 	"os"
@@ -22,14 +19,13 @@ import (
 )
 
 var (
-	sh                                                    *shell.Shell
 	nodeUrl, contractAddress, sellerAddress, buyerAddress string
 	sellerPrivateKey                                      *ecdsa.PrivateKey
 	buyerPrivateKey                                       *ecdsa.PrivateKey
 	conn                                                  *ethclient.Client
 	contract                                              *mycontract.Trading
 	//Data waiting to be sold
-	inFile = "./encTest/10GBfile"
+	inFile = "./encTest/SelfDrivingCar.v3-fixed-small.coco.zip"
 	//Location of processed data
 	outFile = "./encTest/output/"
 	//the keys dir which encrypt raw data,these key creat by masterK1
@@ -45,7 +41,8 @@ var (
 	//merkle tree for data
 	dataTree *merkleTree.MerkleTree
 	//merkle tree for sample
-	sampleTree *merkleTree.MerkleTree
+	sampleTree       *merkleTree.MerkleTree
+	challenge_length = 89
 )
 
 func TestMain(m *testing.M) {
@@ -75,11 +72,11 @@ func TestPreparation(t *testing.T) {
 	}
 	k1Map, _ := utils.ScanDir(outKey)
 	utils.EncryptFileWithMasterKey2(k1Map, outKey, outencKey, key2sdir, masterK2)
-	sampleTree = utils.CommitSampleKeys(key2sdir)
+	sampleTree = utils.CommitSampleKeys(key2sdir, challenge_length)
 	sampleTree.PrintTree()
 }
 
-func BenchmarkEncryptFileWithMasterKey(b *testing.B) {
+func BenchmarkEncryptFileWithMasterKey1(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		err := utils.EncryptFileWithMasterKey(inFile, outFile, outKey, masterK1)
 		if err != nil {
@@ -186,7 +183,7 @@ func BenchmarkChallenge(b *testing.B) {
 send delta_2 to the chain
 */
 func TestResponse(t *testing.T) {
-	sampleTree = utils.CommitSampleKeys(outencKey)
+	sampleTree = utils.CommitSampleKeys(outencKey, challenge_length)
 	auth := utils.NewAuth(conn, sellerAddress, sellerPrivateKey)
 	var hash32 [32]byte
 	copy(hash32[:], sampleTree.RootNode.Hash)
@@ -203,11 +200,11 @@ func TestResponse(t *testing.T) {
 }
 func BenchmarkCommitSampleKeys(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		sampleTree = utils.CommitSampleKeys(outencKey)
+		sampleTree = utils.CommitSampleKeys(outencKey, challenge_length)
 	}
 }
 func BenchmarkResponseContractInteraction(b *testing.B) {
-	sampleTree = utils.CommitSampleKeys(outencKey)
+	sampleTree = utils.CommitSampleKeys(outencKey, challenge_length)
 	auth := utils.NewAuth(conn, sellerAddress, sellerPrivateKey)
 	var hash32 [32]byte
 	copy(hash32[:], sampleTree.RootNode.Hash)
@@ -250,7 +247,7 @@ func BenchmarkCheckSample(b *testing.B) {
 	//encdata
 	encDataMap, _ := utils.ScanDir(outFile)
 	for n := 0; n < b.N; n++ {
-		utils.CheckSample(key2Map, encKeyMap, encDataMap, 950)
+		utils.CheckSample(key2Map, encKeyMap, encDataMap, challenge_length)
 	}
 }
 
@@ -279,11 +276,7 @@ func BenchmarkFinalstepDecryptAllKey(b *testing.B) {
 	//enckey1
 	encKeyMap, _ := utils.ScanDir(outencKey)
 	for n := 0; n < b.N; n++ {
-		for key2Name, filePath := range key2Map {
-			key2, _ := aes.ReadKey(filePath)
-			enckey1, _ := ioutil.ReadFile(encKeyMap[key2Name])
-			aes.Decrypt(enckey1, key2)
-		}
+		utils.FinalstepDecryptAllKey(encKeyMap, key2Map)
 	}
 }
 func BenchmarkFinalstepDecryptAllData(b *testing.B) {
@@ -294,12 +287,7 @@ func BenchmarkFinalstepDecryptAllData(b *testing.B) {
 	//encdata
 	encDataMap, _ := utils.ScanDir(outFile)
 	for n := 0; n < b.N; n++ {
-		for key2Name, filePath := range key2Map {
-			key2, _ := aes.ReadKey(filePath)
-			enckey1, _ := ioutil.ReadFile(encKeyMap[key2Name])
-			key1, _ := aes.Decrypt(enckey1, key2)
-			encdata, _ := ioutil.ReadFile(encDataMap[key2Name])
-			aes.Decrypt(encdata, key1)
-		}
+		utils.FinalstepDecryptAllData(key2Map, encKeyMap, encDataMap)
 	}
+
 }
