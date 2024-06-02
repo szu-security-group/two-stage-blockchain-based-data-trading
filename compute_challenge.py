@@ -5,7 +5,7 @@ def count_challenge(n):
  #upper bound for challenge lentgh
     count = int(4 * n ** 0.5)
     blocks_broken = int (n * 0.05)
-    temp = [(n - blocks_broken - i) / n for i in range(count)]
+    temp = [(n - blocks_broken - i) / (n - i) for i in range(count)]
     for i in range(count):
         prob_fail = reduce(lambda x, y: x * y, temp[0:i+1])
         if prob_fail <= 0.01:
